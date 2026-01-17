@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:columnCount="3"
+        android:rowCount="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ScriptBack"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:text="返回"
+            android:textSize="24dp" />
+
+        <TextView
+            android:layout_width="1000dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:text="請選擇要扮演的角色"
+            android:textSize="30dp" />
+
+        <Button
+            android:id="@+id/ScriptNext"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:text="下一步"
+            android:textSize="24dp" />
+
+    </GridLayout>
+
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="5"
+        android:rowCount="3"
+        android:orientation="horizontal">
+
+        <!-- 第一行 -->
+        <ImageButton
+            android:id="@+id/DishWaiter"
+            android:layout_width="210dp"
+            android:layout_height="450dp"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:src="@drawable/dishwaiter"
+            android:scaleType="center" />
+
+        <ImageButton
+            android:id="@+id/OrderWaiter"
+            android:layout_width="210dp"
+            android:layout_height="450dp"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:src="@drawable/orderwaiter"
+            android:scaleType="center" />
+
+        <ImageButton
+            android:id="@+id/CounterWaiter"
+            android:layout_width="210dp"
+            android:layout_height="450dp"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:src="@drawable/counterwaiter"
+            android:scaleType="center" />
+
+        <ImageButton
+            android:id="@+id/Customer1"
+            android:layout_width="210dp"
+            android:layout_height="450dp"
+            android:layout_row="0"
+            android:layout_column="3"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:src="@drawable/customer1"
+            android:scaleType="center" />
+
+        <ImageButton
+            android:id="@+id/Customer2"
+            android:layout_width="210dp"
+            android:layout_height="450dp"
+            android:layout_row="0"
+            android:layout_column="4"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:src="@drawable/customer2"
+            android:scaleType="center" />
+
+        <!-- 第二行 -->
+        <TextView
+            android:layout_width="210dp"
+            android:layout_height="40dp"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:text="送餐服務生"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="210dp"
+            android:layout_height="40dp"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:text="點餐服務生"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="210dp"
+            android:layout_height="40dp"
+            android:layout_row="1"
+            android:layout_column="2"
+            android:layout_columnSpan="1"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:text="櫃台接待"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="210dp"
+            android:layout_height="40dp"
+            android:layout_row="1"
+            android:layout_column="3"
+            android:layout_columnSpan="1"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:text="客人1"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="210dp"
+            android:layout_height="40dp"
+            android:layout_row="1"
+            android:layout_column="4"
+            android:layout_columnSpan="1"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:text="客人2"
+            android:textSize="20sp" />
+
+        <!-- 第三行 -->
+        <EditText
+            android:id="@+id/DW_ID"
+            android:layout_width="210dp"
+            android:layout_height="50dp"
+            android:layout_row="2"
+            android:gravity="center"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:hint="請輸入送餐服務生學號"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/OW_ID"
+            android:layout_width="210dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_row="2"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:hint="請輸入點餐服務生學號"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/CW_ID"
+            android:layout_width="210dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_row="2"
+            android:layout_column="2"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:hint="請輸入接待櫃檯學號"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/C1_ID"
+            android:layout_width="210dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_row="2"
+            android:layout_column="3"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:hint="請輸入客人1學號"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/C2_ID"
+            android:layout_width="210dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_row="2"
+            android:layout_column="4"
+            android:layout_columnSpan="1"
+            android:layout_margin="20dp"
+            android:hint="請輸入客人2學號"
+            android:textSize="14sp" />
+
+    </GridLayout>
+
+
+</LinearLayout>
