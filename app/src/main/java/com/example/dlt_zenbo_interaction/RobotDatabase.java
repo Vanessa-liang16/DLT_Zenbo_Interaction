@@ -6,6 +6,7 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import com.asus.robotframework.API.MotionControl;
 import com.asus.robotframework.API.RobotAPI;
 import com.asus.robotframework.API.RobotFace;
 import com.asus.robotframework.API.WheelLights;
@@ -101,15 +102,27 @@ public class RobotDatabase {
         if (robotAPI != null) {
             switch (actionType) {
                 case ACTION_HAPPY:
-                    try {
-                        // 新增一些有趣的動作，例如：
-                        robotAPI.motion.moveBody(0f, 0f, 360f);
 
-                        Toast.makeText(context, "Happy action initiated", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        Toast.makeText(context, "Error in happy action: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    new Thread(() -> {
+                        try {
+                            for (int i = 0; i < 8; i++) {
+                                robotAPI.motion.moveBody(
+                                        0f,
+                                        0f,
+                                        45, // 每次轉 45 度
+                                        MotionControl.SpeedLevel.Body.L2 // 穩定速度
+                                );
+
+                                Thread.sleep(1000); // 1 秒
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+
+                    Toast.makeText(context, "Happy spinning!", Toast.LENGTH_SHORT).show();
                     break;
+
                 case ACTION_DANCE:
                     try {
                         // 设置不同的颜色，快速切换
