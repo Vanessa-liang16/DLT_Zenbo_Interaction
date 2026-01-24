@@ -82,17 +82,17 @@ public class RobotDatabase {
     }
 
     //2026
-    // 增加動作執行方法
-    // 內部類別
+    // 新增 WebAppInterface 類別
     public class WebAppInterface {
         @JavascriptInterface
         public void triggerZenboAction(String action) {
+            RobotDatabase db = RobotDatabase.getInstance();
             switch(action) {
                 case "happy":
-                    performZenboAction(ACTION_HAPPY);
+                    db.performZenboAction(RobotDatabase.ACTION_HAPPY);
                     break;
                 case "dance":
-                    performZenboAction(ACTION_DANCE);
+                    db.performZenboAction(RobotDatabase.ACTION_DANCE);
                     break;
             }
         }
@@ -102,30 +102,24 @@ public class RobotDatabase {
         if (robotAPI != null) {
             switch (actionType) {
                 case ACTION_HAPPY:
+                    try {
+                        // 直接原地旋轉
+                        robotAPI.motion.moveBody(
+                                0f,       // x軸移動距離
+                                0f,       // y軸移動距離
+                                360,      // 旋轉角度(度)
+                                MotionControl.SpeedLevel.Body.L3  // 最快速度
+                        );
 
-                    new Thread(() -> {
-                        try {
-                            for (int i = 0; i < 8; i++) {
-                                robotAPI.motion.moveBody(
-                                        0f,
-                                        0f,
-                                        45, // 每次轉 45 度
-                                        MotionControl.SpeedLevel.Body.L2 // 穩定速度
-                                );
-
-                                Thread.sleep(1000); // 1 秒
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }).start();
-
-                    Toast.makeText(context, "Happy spinning!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Happy spinning!", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Error in happy action: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                     break;
 
                 case ACTION_DANCE:
                     try {
-                        // 设置不同的颜色，快速切换
+                        // 保持原本的 dance 換顏色程式碼不變
                         int[] colors = {
                                 0xFF0000,   // 红色
                                 0x00FF00,   // 绿色

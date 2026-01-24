@@ -260,22 +260,7 @@ class ApiTask extends AsyncTask<Void, Void, String> {
 
     }
 
-    //2026
-    // 新增 WebAppInterface 類別
-    class WebAppInterface {
-        @JavascriptInterface
-        public void triggerZenboAction(String action) {
-            RobotDatabase db = RobotDatabase.getInstance();
-            switch(action) {
-                case "happy":
-//                    db.performZenboAction(RobotDatabase.ACTION_HAPPY);
-                    break;
-                case "dance":
-                    db.performZenboAction(RobotDatabase.ACTION_DANCE);
-                    break;
-            }
-        }
-    }
+
     private String getResponse() {
         try {
             // 建立連線
