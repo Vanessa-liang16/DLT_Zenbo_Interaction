@@ -19,6 +19,8 @@ import com.asus.robotframework.API.results.DetectPersonResult;
 import com.asus.robotframework.API.results.FaceResult;
 import com.asus.robotframework.API.results.GesturePointResult;
 import com.asus.robotframework.API.results.TrackingResult;
+import com.asus.robotframework.API.Utility;
+
 import android.os.Handler;
 import java.util.Random;
 
@@ -39,6 +41,9 @@ public class RobotDatabase {
     // 增加動作常數
     public static final int ACTION_HAPPY = 1;
     public static final int ACTION_DANCE = 2;
+    public static final int ACTION_SHY = 3;
+    public static final int ACTION_FOLLOW_OBJECT = 4;
+    public static final int ACTION_STOP_FOLLOW = 5;
     private Context context;
 
     // 修改建構函數或 setter 方法來設置 Context
@@ -94,6 +99,15 @@ public class RobotDatabase {
                 case "dance":
                     db.performZenboAction(RobotDatabase.ACTION_DANCE);
                     break;
+                case "shy":
+                    db.performZenboAction(RobotDatabase.ACTION_SHY);
+                    break;
+                case "followObject":
+                    db.performZenboAction(RobotDatabase.ACTION_FOLLOW_OBJECT);
+                    break;
+                case "stopFollow":
+                    db.performZenboAction(RobotDatabase.ACTION_STOP_FOLLOW);
+                    break;
             }
         }
     }
@@ -146,10 +160,10 @@ public class RobotDatabase {
                                     // 每200毫秒变一次颜色
                                     handler.postDelayed(this, 200);
                                 } else {
-                                    // 3秒后关闭
+                                    // 7秒后关闭
                                     handler.postDelayed(() -> {
                                         robotAPI.wheelLights.turnOff(WheelLights.Lights.SYNC_BOTH, 0xFF);
-                                    }, 3000);
+                                    }, 7000);
                                 }
                             }
                         };
@@ -160,6 +174,78 @@ public class RobotDatabase {
                         Toast.makeText(context, "Dance action with wheel lights initiated", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         Toast.makeText(context, "Error in dance action: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case ACTION_SHY:
+                    try {
+                        final int[] shyCount = {0};
+
+                        Runnable shyAction = new Runnable() {
+                            @Override
+                            public void run() {
+                                if (shyCount[0] < 2) {  // 重複2次
+                                    // 低頭，幅度更大，速度更快
+                                    robotAPI.motion.moveHead(0, -20, MotionControl.SpeedLevel.Head.L3);  // 增加幅度到-20，速度到最快
+
+                                    // 延遲後抬頭
+                                    new Handler().postDelayed(() -> {
+                                        // 快速回正
+                                        robotAPI.motion.moveHead(0, 0, MotionControl.SpeedLevel.Head.L3);
+
+                                        // 計數器增加
+                                        shyCount[0]++;
+
+                                        // 如果還沒完成2次，繼續
+                                        if (shyCount[0] < 2) {
+                                            new Handler().postDelayed(this, 500);  // 縮短間隔到0.5秒
+                                        } else {
+                                            // 完全回正
+                                            robotAPI.motion.moveHead(0, 0, MotionControl.SpeedLevel.Head.L3);
+                                        }
+                                    }, 500);  // 縮短延遲時間
+                                }
+                            }
+                        };
+
+                        // 開始執行
+                        shyAction.run();
+
+                        Toast.makeText(context, "Feeling shy!", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Error in shy action: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case ACTION_FOLLOW_OBJECT:
+                    try {
+                        // 首先讓機器人看向使用者（方向預設為0）
+                        robotAPI.utility.lookAtUser(0);
+
+                        // 延遲後開始跟隨
+                        new Handler().postDelayed(() -> {
+                            robotAPI.utility.followUser();
+
+                            // 10秒後停止
+                            new Handler().postDelayed(() -> {
+                                robotAPI.motion.stopMoving();  // 停止移動
+                            }, 10000);
+                        }, 1000);  // 1秒延遲，確保先看向使用者
+
+                        Toast.makeText(context, "Looking at and following user!", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Error in follow user action: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case ACTION_STOP_FOLLOW:
+                    try {
+                        // 停止移動
+                        robotAPI.motion.stopMoving();
+
+                        // 重置頭部位置
+                        robotAPI.motion.moveHead(0, 0, MotionControl.SpeedLevel.Head.L3);
+
+                        Toast.makeText(context, "Stopped following!", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Error stopping follow: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     break;
             }
