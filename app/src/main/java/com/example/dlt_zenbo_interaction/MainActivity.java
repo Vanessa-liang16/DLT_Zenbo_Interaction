@@ -144,7 +144,7 @@ public class MainActivity extends RobotActivity {
                 WebView webView = findViewById(R.id.webView);
 
                 // 加載網頁
-                webView.loadUrl("http://140.115.158.199:5173/");
+                webView.loadUrl("https://learninghcilab.net/");
 
                 WebSettings webSettings = webView.getSettings();
                 webSettings.setJavaScriptEnabled(true);  // 啟用 JavaScript
