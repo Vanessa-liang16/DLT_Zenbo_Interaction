@@ -38,6 +38,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import com.asus.robotframework.API.RobotCallback;
+import com.asus.robotframework.API.DialogSystem;
+
 
 public class StartScriptActivity extends RobotActivity {
 
@@ -52,10 +55,12 @@ public class StartScriptActivity extends RobotActivity {
     // JSON Array格式的劇本
     private JSONArray script;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scriptempty);
+        TextView scriptText = findViewById(R.id.scriptText);
         // 隱藏上方狀態列
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -149,7 +154,7 @@ public class StartScriptActivity extends RobotActivity {
         }
 
         // 啟動ReceivingScript
-        ReceivingScript receivingScript = new ReceivingScript("即將開始練習劇本，歡迎光臨棒壽司！", "DEFAULT", characters, userData, voices, script, robotAPI, narratorVoice, this, currentLine, endLine);
+        ReceivingScript receivingScript = new ReceivingScript("即將開始練習劇本，歡迎光臨棒壽司！", "DEFAULT", characters, userData, voices, script, robotAPI, narratorVoice, this, currentLine, endLine, scriptText);
         Thread receivingScriptThread = new Thread(receivingScript);
         receivingScriptThread.start();
     }
@@ -166,6 +171,7 @@ class VoiceTask extends AsyncTask<Void, Void, Void> {
     private String expression;
     private int action;
     private Exception exception;
+
 
     public VoiceTask(RobotAPI robotAPI, String content, String expression, int action, int voice) {
         this.robotAPI = robotAPI;
@@ -279,16 +285,26 @@ class ReceivingScript implements Runnable {
     StartScriptActivity startScriptActivity;
     Boolean isSpeaking = false;
     Boolean hintSound = false;
+    String lastContent = "";
 
-    int[] narratorLines = new int[] {129, 130, 131, 132, 133, 134, 140, 145, 160, 162, 154, 166, 171, 181, 182, 183, 184, 185, 186, 187, 190, 191};
-    int[] owLines = new int[] {146, 148, 150, 152, 156, 159};
-    int[] dwLines = new int[] {161, 163, 195, 168, 170, 189, 193};
-    int[] cwLines = new int[] {139, 141, 144, 173, 175, 176, 178, 180, 188, 192, 194};
-    int[] c1Lines = new int[] {135, 137, 147, 149, 151, 155, 167, 169, 172, 177};
-    int[] c2Lines = new int[] {136, 138, 142, 153, 157, 164, 174};
-    int[] petLines = new int[] {143, 158, 165, 179};
+    android.speech.tts.TextToSpeech tts;
+    TextView scriptText;
+//    int[] narratorLines = new int[] {129, 130, 131, 132, 133, 134, 140, 145, 160, 162, 154, 166, 171, 181, 182, 183, 184, 185, 186, 187, 190, 191};
+//    int[] owLines = new int[] {146, 148, 150, 152, 156, 159};
+//    int[] dwLines = new int[] {161, 163, 195, 168, 170, 189, 193};
+//    int[] cwLines = new int[] {139, 141, 144, 173, 175, 176, 178, 180, 188, 192, 194};
+//    int[] c1Lines = new int[] {135, 137, 147, 149, 151, 155, 167, 169, 172, 177};
+//    int[] c2Lines = new int[] {136, 138, 142, 153, 157, 164, 174};
+//    int[] petLines = new int[] {143, 158, 165, 179};
+    int[] narratorLines = new int[] {329, 333, 334, 335, 345, 357, 359, 365, 369, 373, 382, 392, 401, 402, 403, 404, 405};
+    int[] cwLines = new int[] {336, 338, 341, 343, 385, 387, 389, 396};
+    int[] owLines = new int[] {346, 348, 351, 353, 355, 356, 384};
+    int[] dwLines = new int[] {358, 362, 364, 368, 374, 376, 378, 380, 395};
+    int[] c1Lines = new int[] {337, 344, 347, 350, 352, 361, 363, 367, 370, 372, 379, 383, 388, 394, 397};
+    int[] c2Lines = new int[] {339, 340, 349, 354, 371, 375, 386, 391, 400};
+    int[] petLines = new int[] {330, 331, 332, 342, 360, 366, 377, 381, 390, 393, 398, 399};
 
-    public ReceivingScript(String welcome, String expression, HashMap<String, String> characters, HashMap<String, JSONObject> userData, HashMap<String, Integer> voices, JSONArray script, RobotAPI robotAPI, int narratorVoice, StartScriptActivity startScriptActivity, int currentLine, int endLine) {
+    public ReceivingScript(String welcome, String expression, HashMap<String, String> characters, HashMap<String, JSONObject> userData, HashMap<String, Integer> voices, JSONArray script, RobotAPI robotAPI, int narratorVoice, StartScriptActivity startScriptActivity, int currentLine, int endLine, TextView scriptText) {
         // init variables
         this.characters = characters;
         this.userData = userData;
@@ -302,6 +318,7 @@ class ReceivingScript implements Runnable {
         this.currentLine = currentLine;
         this.nextLine = currentLine;
         this.endLine = endLine;
+        this.scriptText = scriptText;
 
         // add lines to hashmap
         lines = new HashMap<>();
@@ -328,9 +345,13 @@ class ReceivingScript implements Runnable {
 
         // init MediaPlayer
         voicePlayer = new MediaPlayer();
-
-        // welcome
-        callVoice(welcome, expression, 0);
+        tts = new android.speech.tts.TextToSpeech(startScriptActivity, status -> {
+            if (status == android.speech.tts.TextToSpeech.SUCCESS) {
+                tts.setLanguage(java.util.Locale.JAPANESE);
+                // TTS 初始化完成後再開始
+                callVoice(welcome, expression, 0);
+            }
+        });
     }
 
     private MicrophoneStream microphoneStream;
@@ -360,11 +381,9 @@ class ReceivingScript implements Runnable {
     }
 
     public void callVoice(String content, String expression, int action) {
-        // if currentLine = 0 => finish this activity
-        // set current character
-        // currentLine in lines.get(currentCharacter)
-        // 若currentLine在petLines中，則currentCharacter為Pet
-        if (currentLine == 143 || currentLine == 158 || currentLine == 165 || currentLine == 179) {
+        if (currentLine == 330 || currentLine == 331 || currentLine == 332 || currentLine == 342 || currentLine == 360 || currentLine == 366 ||
+                currentLine == 377 || currentLine == 381 || currentLine == 390 || currentLine == 393 || currentLine == 395 || currentLine == 398 ||
+                currentLine == 399) {
             currentCharacter = "Pet";
         } else {
             for (String key : lines.keySet()) {
@@ -382,11 +401,9 @@ class ReceivingScript implements Runnable {
             this.isSpeaking = true;
             this.isRecognizing = false;
 
-            // 播放提示音效
             hintPlayer = MediaPlayer.create(startScriptActivity, R.raw.start);
             hintPlayer.start();
 
-            // if finish => release and new MediaPlayer (listener)
             hintPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -395,142 +412,138 @@ class ReceivingScript implements Runnable {
                 }
             });
 
-            // speechrecognizer 啟動
-            reco.startContinuousRecognitionAsync();
-            return;
-        }
-
-        this.isSpeaking = false;
-
-        // 若voicePlayer正在播放，則return
-        if (voicePlayer.isPlaying()) {
-            return;
-        }
-
-        // speechrecognizer 停止
-        if (reco != null) {
-            reco.stopContinuousRecognitionAsync();
-        }
-
-        try {
-            String encodedContent = URLEncoder.encode(content, "UTF-8");
-            String voiceURL = "http://140.115.158.245:23456/voice/vits?text=" + encodedContent + "&id=" + voices.get(currentCharacter) + "&format=wav&length=1.5";
-            try {
-                voicePlayer.setDataSource(voiceURL);
-            } catch (IOException e) {
-                reco.startContinuousRecognitionAsync();
-                e.printStackTrace();
-            }
-
-            // play VITS audio
-            voicePlayer.prepareAsync();
-            voicePlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    voicePlayer.start();
-                }
-            });
-
-            // set error Listener
-            voicePlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    Log.e("MediaPlayer", "Error: " + what + ", Extra: " + extra);
-                    return false;
-                }
-            });
-
-            // set zenbo face expression
-            robotAPI.robot.setExpression(RobotFace.valueOf(expression));
-
-            // set zenbo action
-//            robotAPI.utility.playAction(action);
-
-            voicePlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    // 若沒收到音
-                    if (content.equals("沒聽清楚可以再說一次嗎~")) {
-                        // speechrecognizer 啟動
-                        voicePlayer.release();
-                        voicePlayer = new MediaPlayer();
-                        isSpeaking = true;
-                        isRecognizing = false;
-                        reco.startContinuousRecognitionAsync();
-                        return;
-                    }
-
-                    // mediaPlayer結束後，將zenbo face設為DEFAULT
-                    // sleep
-                    if (currentLine == -1) {
-                        // 切換Activity
-//                        Intent intent = new Intent(startScriptActivity, MainActivity.class);
-//                        startScriptActivity.startActivity(intent);
-                        return;
-                    }
+            // 等待 reco 初始化完成
+            new Thread(() -> {
+                while (reco == null) {
                     try {
-                        Thread.sleep(10);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    robotAPI.robot.setExpression(RobotFace.DEFAULT);
-//                    robotAPI.utility.playAction(0);
-                    // voicePlayer釋放
-                    voicePlayer.release();
-                    voicePlayer = new MediaPlayer();
-                    // 啟動speechrecognizer
-//                    reco.startContinuousRecognitionAsync();
+                }
+                reco.startContinuousRecognitionAsync();
+
+                // 等待 20 秒，如果沒有收到語音就自動跳過
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                // 如果還在等待中（學生沒說話），就自動跳過
+                if (isSpeaking) {
+                    isSpeaking = false;
+                    reco.stopContinuousRecognitionAsync();
                     currentLine = nextLine;
 
-                    // end
                     if (currentLine == endLine) {
-                        // end
                         currentCharacter = "Narrator";
                         callVoice("劇本結束，謝謝您的參與！", "DEFAULT", 0);
                         currentLine = -1;
                         return;
                     }
 
-                    // 找JSON Array的next_section_id
                     for (int i = 0; i < script.length(); i++) {
                         try {
                             JSONObject scriptObj = script.getJSONObject(i);
-                            if (scriptObj.getInt("section_id") == currentLine) {
-                                nextLine = scriptObj.getInt("next_section_id");
+                            if (scriptObj.getString("section_id").equals(String.valueOf(currentLine))) {
+                                nextLine = Integer.parseInt(scriptObj.getString("next_section_id"));
                                 break;
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        } catch (JSONException e) { e.printStackTrace(); }
                     }
-                    // get next script content
+
                     for (int i = 0; i < script.length(); i++) {
                         try {
                             JSONObject scriptObj = script.getJSONObject(i);
-                            if (scriptObj.getInt("section_id") == currentLine) {
+                            if (scriptObj.getString("section_id").equals(String.valueOf(currentLine))) {
                                 callVoice(scriptObj.getString("content"), "DEFAULT", 0);
                                 break;
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        } catch (JSONException e) { e.printStackTrace(); }
                     }
                 }
-            });
-        } catch (Exception e) {
-            reco.startContinuousRecognitionAsync();
-            e.printStackTrace();
+            }).start();
+            return;
         }
-    }
 
-    public String recognizeFromMicrophone() throws InterruptedException, ExecutionException {
+        this.isSpeaking = false;
+
+        if (reco != null) {
+            reco.stopContinuousRecognitionAsync();
+        }
+
+        lastContent = content;
+        robotAPI.robot.setExpression(RobotFace.valueOf(expression));
+        if (content.equals("即將開始練習劇本，歡迎光臨棒壽司！") ||
+                content.equals("劇本結束，謝謝您的參與！") ||
+                content.equals("沒聽清楚可以再說一次嗎~")) {
+            tts.setLanguage(java.util.Locale.TRADITIONAL_CHINESE);
+        } else {
+            tts.setLanguage(java.util.Locale.JAPANESE);
+        }
+        tts.speak(content, android.speech.tts.TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
+
+        new Thread(() -> {
+            try {
+                long waitTime = Math.max(2000, content.length() * 300L);
+                Thread.sleep(waitTime);
+                startScriptActivity.runOnUiThread(() -> {
+                    scriptText.setText(content);
+                });
+                robotAPI.robot.setExpression(RobotFace.DEFAULT);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (lastContent.equals("沒聽清楚可以再說一次嗎~")) {
+                isSpeaking = true;
+                isRecognizing = false;
+                if (reco != null) reco.startContinuousRecognitionAsync();
+                return;
+            }
+            if (currentLine == -1) return;
+
+            currentLine = nextLine;
+
+            if (currentLine == endLine) {
+                currentCharacter = "Narrator";
+                callVoice("劇本結束，謝謝您的參與！", "DEFAULT", 0);
+                currentLine = -1;
+                return;
+            }
+
+            // 找JSON Array的next_section_id
+            for (int i = 0; i < script.length(); i++) {
+                try {
+                    JSONObject scriptObj = script.getJSONObject(i);
+                    if (scriptObj.getString("section_id").equals(String.valueOf(currentLine))) {
+                        nextLine = Integer.parseInt(scriptObj.getString("next_section_id"));
+                        break;
+                    }
+                } catch (JSONException e) { e.printStackTrace(); }
+            }
+
+            // get next script content
+            for (int i = 0; i < script.length(); i++) {
+                try {
+                    JSONObject scriptObj = script.getJSONObject(i);
+                    if (scriptObj.getString("section_id").equals(String.valueOf(currentLine))) {
+                        callVoice(scriptObj.getString("content"), "DEFAULT", 0);
+                        break;
+                    }
+                } catch (JSONException e) { e.printStackTrace(); }
+            }
+        }).start();
+    }
+        public String recognizeFromMicrophone() throws InterruptedException, ExecutionException {
         AudioConfig audioInput = AudioConfig.fromStreamInput(createMicrophoneStream());
         reco = new SpeechRecognizer(speechConfig, audioInput);
 
         reco.recognized.addEventListener((o, speechRecognitionResultEventArgs) -> {
             final String s = speechRecognitionResultEventArgs.getResult().getText();
-            if (voicePlayer.isPlaying() == false && speechRecognitionResultEventArgs.getResult().getReason() == ResultReason.RecognizedSpeech) {
-                if (s.length() > 0 && !isRecognizing && voicePlayer.isPlaying() == false) {
+            if (speechRecognitionResultEventArgs.getResult().getReason() == ResultReason.RecognizedSpeech) {
+                if (s.length() > 0 && !isRecognizing) {
                     Log.i("ed", "Final result received: " + s);
                     isRecognizing = true;
                     try {

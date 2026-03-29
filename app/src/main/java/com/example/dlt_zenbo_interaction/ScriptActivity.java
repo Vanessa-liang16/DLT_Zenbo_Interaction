@@ -189,8 +189,8 @@ public class ScriptActivity extends RobotActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 129);
-                intent.putExtra("endLine", 187);
+                intent.putExtra("currentLine", 329);
+                intent.putExtra("endLine", 335);
                 startScene(intent);
             }
         });
@@ -199,8 +199,8 @@ public class ScriptActivity extends RobotActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 187);
-                intent.putExtra("endLine", 134);
+                intent.putExtra("currentLine", 335);
+                intent.putExtra("endLine", 345);
                 startScene(intent);
             }
         });
@@ -209,8 +209,8 @@ public class ScriptActivity extends RobotActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 134);
-                intent.putExtra("endLine", 145);
+                intent.putExtra("currentLine", 345);
+                intent.putExtra("endLine", 357);
                 startScene(intent);
             }
         });
@@ -219,8 +219,8 @@ public class ScriptActivity extends RobotActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 145);
-                intent.putExtra("endLine", 160);
+                intent.putExtra("currentLine", 357);
+                intent.putExtra("endLine", 369);
                 startScene(intent);
             }
         });
@@ -229,8 +229,8 @@ public class ScriptActivity extends RobotActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 160);
-                intent.putExtra("endLine", 166);
+                intent.putExtra("currentLine", 369);
+                intent.putExtra("endLine", 382);
                 startScene(intent);
             }
         });
@@ -239,8 +239,8 @@ public class ScriptActivity extends RobotActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 166);
-                intent.putExtra("endLine", 171);
+                intent.putExtra("currentLine", 382);
+                intent.putExtra("endLine", 392);
                 startScene(intent);
             }
         });
@@ -249,8 +249,8 @@ public class ScriptActivity extends RobotActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 171);
-                intent.putExtra("endLine", 181);
+                intent.putExtra("currentLine", 392);
+                intent.putExtra("endLine", 402);
                 startScene(intent);
             }
         });
@@ -259,7 +259,7 @@ public class ScriptActivity extends RobotActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 181);
+                intent.putExtra("currentLine", 402);
                 intent.putExtra("endLine", 0);
                 startScene(intent);
             }
