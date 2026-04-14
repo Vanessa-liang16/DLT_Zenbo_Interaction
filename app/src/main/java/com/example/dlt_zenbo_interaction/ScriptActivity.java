@@ -184,87 +184,95 @@ public class ScriptActivity extends RobotActivity {
             }
         });
 
-        // set listeners for the Button Scene1~Scene8
+        // 第一幕：YouTuber開場（536～543）
         Scene1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 329);
-                intent.putExtra("endLine", 335);
+                intent.putExtra("currentLine", 536);
+                intent.putExtra("endLine", 544);
                 startScene(intent);
             }
         });
 
+        // 第二幕：接待客人（544～553）
         Scene2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 335);
-                intent.putExtra("endLine", 345);
+                intent.putExtra("currentLine", 544);
+                intent.putExtra("endLine", 554);
                 startScene(intent);
             }
         });
 
+        // 第三幕：介紹與點餐（554～566）
         Scene3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 345);
-                intent.putExtra("endLine", 357);
+                intent.putExtra("currentLine", 554);
+                intent.putExtra("endLine", 567);
                 startScene(intent);
             }
         });
 
+        // 第四幕：上菜（567～580）
         Scene4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 357);
-                intent.putExtra("endLine", 369);
+                intent.putExtra("currentLine", 567);
+                intent.putExtra("endLine", 581);
                 startScene(intent);
             }
         });
 
+        // 第五幕：中途互動（581～594）
         Scene5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 369);
-                intent.putExtra("endLine", 382);
+                intent.putExtra("currentLine", 581);
+                intent.putExtra("endLine", 595);
                 startScene(intent);
             }
         });
 
+        // 第六幕：結帳（595～606）
         Scene6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 382);
-                intent.putExtra("endLine", 392);
+                intent.putExtra("currentLine", 595);
+                intent.putExtra("endLine", 607);
                 startScene(intent);
             }
         });
 
+        // 第七幕：走向未來的一步（607～615）
         Scene7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 392);
-                intent.putExtra("endLine", 402);
+                intent.putExtra("currentLine", 607);
+                intent.putExtra("endLine", 616);
                 startScene(intent);
             }
         });
 
+        // 第八幕：謝幕（616～620，endLine=0 表示跑完整個劇本）
         Scene8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScriptActivity.this, StartScriptActivity.class);
-                intent.putExtra("currentLine", 402);
+                intent.putExtra("currentLine", 616);
                 intent.putExtra("endLine", 0);
                 startScene(intent);
             }
         });
     }
+
 
     private void startScene(Intent intent) {
         if (selectedCharacters.size() == 0) {

@@ -48,7 +48,7 @@
             android:layout_margin="20dp"
             android:layout_row="0"
             android:layout_column="0"
-            android:text="第一幕 - 上台"
+            android:text="第一幕 - Youtuber開場"
             android:textSize="60dp"
             android:gravity="center"/>
 
@@ -59,7 +59,7 @@
             android:layout_margin="20dp"
             android:layout_row="0"
             android:layout_column="1"
-            android:text="第二幕 - 設計廚房"
+            android:text="第二幕 - 接待客人"
             android:textSize="60dp"
             android:gravity="center"/>
 
@@ -70,7 +70,7 @@
             android:layout_margin="20dp"
             android:layout_row="1"
             android:layout_column="0"
-            android:text="第三幕 - 接待"
+            android:text="第三幕 - 介紹與點餐"
             android:textSize="60dp"
             android:gravity="center"/>
 
@@ -81,7 +81,7 @@
             android:layout_margin="20dp"
             android:layout_row="1"
             android:layout_column="1"
-            android:text="第四幕 - 介紹與點餐"
+            android:text="第四幕 - 上菜"
             android:textSize="60dp"
             android:gravity="center"/>
 
@@ -92,7 +92,7 @@
             android:layout_margin="20dp"
             android:layout_row="2"
             android:layout_column="0"
-            android:text="第五幕 - 上菜"
+            android:text="第五幕 - 中途互動"
             android:textSize="60dp"
             android:gravity="center"/>
 
@@ -103,7 +103,7 @@
             android:layout_margin="20dp"
             android:layout_row="2"
             android:layout_column="1"
-            android:text="第六幕 - 吃飯中途"
+            android:text="第六幕 - 結帳"
             android:textSize="60dp"
             android:gravity="center"/>
 
@@ -114,7 +114,7 @@
             android:layout_margin="20dp"
             android:layout_row="3"
             android:layout_column="0"
-            android:text="第七幕 - 結帳"
+            android:text="第七幕 - 走向未來的一步"
             android:textSize="60dp"
             android:gravity="center"/>
 

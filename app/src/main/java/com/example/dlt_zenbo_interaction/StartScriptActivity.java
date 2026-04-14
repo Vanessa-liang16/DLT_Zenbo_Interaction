@@ -72,7 +72,7 @@ public class StartScriptActivity extends RobotActivity {
         // 取得傳遞過來的資料(HashMap)
         characters = (HashMap<String, String>) intent.getSerializableExtra("characters");
         // get currentLine(int)
-        int currentLine = intent.getIntExtra("currentLine", 129);
+        int currentLine = intent.getIntExtra("currentLine", 536);
         // get endLine(int)
         int endLine = intent.getIntExtra("endLine", 0);
 
@@ -145,6 +145,7 @@ public class StartScriptActivity extends RobotActivity {
             response = scriptTask.get();
             script = new JSONArray(response);
 //            Toast.makeText(this, "script: " + script, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "第一筆section_id=" + script.getJSONObject(0).optString("section_id"), Toast.LENGTH_LONG).show();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -279,8 +280,8 @@ class ReceivingScript implements Runnable {
     SpeechRecognizer reco = null;
     RobotAPI robotAPI;
     String currentCharacter = "Narrator";
-    int currentLine = 129;
-    int nextLine = 129;
+    int currentLine = 536;
+    int nextLine = 536;
     int endLine = 0;
     StartScriptActivity startScriptActivity;
     Boolean isSpeaking = false;
@@ -289,20 +290,28 @@ class ReceivingScript implements Runnable {
 
     android.speech.tts.TextToSpeech tts;
     TextView scriptText;
-//    int[] narratorLines = new int[] {129, 130, 131, 132, 133, 134, 140, 145, 160, 162, 154, 166, 171, 181, 182, 183, 184, 185, 186, 187, 190, 191};
+    //    int[] narratorLines = new int[] {129, 130, 131, 132, 133, 134, 140, 145, 160, 162, 154, 166, 171, 181, 182, 183, 184, 185, 186, 187, 190, 191};
 //    int[] owLines = new int[] {146, 148, 150, 152, 156, 159};
 //    int[] dwLines = new int[] {161, 163, 195, 168, 170, 189, 193};
 //    int[] cwLines = new int[] {139, 141, 144, 173, 175, 176, 178, 180, 188, 192, 194};
 //    int[] c1Lines = new int[] {135, 137, 147, 149, 151, 155, 167, 169, 172, 177};
 //    int[] c2Lines = new int[] {136, 138, 142, 153, 157, 164, 174};
 //    int[] petLines = new int[] {143, 158, 165, 179};
-    int[] narratorLines = new int[] {329, 333, 334, 335, 345, 357, 359, 365, 369, 373, 382, 392, 401, 402, 403, 404, 405};
-    int[] cwLines = new int[] {336, 338, 341, 343, 385, 387, 389, 396};
-    int[] owLines = new int[] {346, 348, 351, 353, 355, 356, 384};
-    int[] dwLines = new int[] {358, 362, 364, 368, 374, 376, 378, 380, 395};
-    int[] c1Lines = new int[] {337, 344, 347, 350, 352, 361, 363, 367, 370, 372, 379, 383, 388, 394, 397};
-    int[] c2Lines = new int[] {339, 340, 349, 354, 371, 375, 386, 391, 400};
-    int[] petLines = new int[] {330, 331, 332, 342, 360, 366, 377, 381, 390, 393, 398, 399};
+    // ── 角色行號對應（根據新資料庫 script_id=8）──
+    // Narrator（導演 / 旁白 / 所有人）
+    int[] narratorLines = new int[]{536, 537, 538, 539, 542, 543, 544, 554, 567, 569, 576, 581, 586, 595, 607, 615, 616, 617, 618, 619, 620};
+    // 櫃台接待 CounterWaiter
+    int[] cwLines       = new int[]{545, 547, 550, 552, 598, 600, 602, 611};
+    // 點餐服務生 OrderWaiter
+    int[] owLines       = new int[]{555, 556, 558, 561, 563, 565, 566, 597};
+    // 送餐服務生 DishWaiter
+    int[] dwLines       = new int[]{568, 570, 571, 573, 575, 577, 578, 580, 587, 589, 590, 591, 593, 610, 612};
+    // 客人1 Customer1
+    int[] c1Lines       = new int[]{546, 549, 553, 557, 560, 562, 572, 579, 582, 584, 585, 592, 596, 601};
+    // 客人2 Customer2
+    int[] c2Lines       = new int[]{548, 559, 564, 574, 583, 588, 599, 604};
+    // 寵物機器人 Pet
+    int[] petLines      = new int[]{540, 541, 551, 594, 603, 608, 609, 613, 614};
 
     public ReceivingScript(String welcome, String expression, HashMap<String, String> characters, HashMap<String, JSONObject> userData, HashMap<String, Integer> voices, JSONArray script, RobotAPI robotAPI, int narratorVoice, StartScriptActivity startScriptActivity, int currentLine, int endLine, TextView scriptText) {
         // init variables
@@ -381,9 +390,9 @@ class ReceivingScript implements Runnable {
     }
 
     public void callVoice(String content, String expression, int action) {
-        if (currentLine == 330 || currentLine == 331 || currentLine == 332 || currentLine == 342 || currentLine == 360 || currentLine == 366 ||
-                currentLine == 377 || currentLine == 381 || currentLine == 390 || currentLine == 393 || currentLine == 395 || currentLine == 398 ||
-                currentLine == 399) {
+        if (currentLine == 540 || currentLine == 541 || currentLine == 551 || currentLine == 594 ||
+                currentLine == 603 || currentLine == 608 || currentLine == 609 || currentLine == 613 ||
+                currentLine == 614) {
             currentCharacter = "Pet";
         } else {
             for (String key : lines.keySet()) {
@@ -474,7 +483,7 @@ class ReceivingScript implements Runnable {
         }
 
         lastContent = content;
-        robotAPI.robot.setExpression(RobotFace.valueOf(expression));
+        robotAPI.robot.setExpression(RobotFace.SINGING);
         if (content.equals("即將開始練習劇本，歡迎光臨棒壽司！") ||
                 content.equals("劇本結束，謝謝您的參與！") ||
                 content.equals("沒聽清楚可以再說一次嗎~")) {
@@ -536,7 +545,7 @@ class ReceivingScript implements Runnable {
             }
         }).start();
     }
-        public String recognizeFromMicrophone() throws InterruptedException, ExecutionException {
+    public String recognizeFromMicrophone() throws InterruptedException, ExecutionException {
         AudioConfig audioInput = AudioConfig.fromStreamInput(createMicrophoneStream());
         reco = new SpeechRecognizer(speechConfig, audioInput);
 
