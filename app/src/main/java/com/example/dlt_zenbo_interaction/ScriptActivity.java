@@ -272,7 +272,7 @@ public class ScriptActivity extends RobotActivity {
             }
         });
     }
-
+//換
 
     private void startScene(Intent intent) {
         if (selectedCharacters.size() == 0) {

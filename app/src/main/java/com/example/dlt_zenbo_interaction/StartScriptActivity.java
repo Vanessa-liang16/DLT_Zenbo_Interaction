@@ -477,6 +477,7 @@ class ReceivingScript implements Runnable {
         }
 
         this.isSpeaking = false;
+        //換
 
         if (reco != null) {
             reco.stopContinuousRecognitionAsync();
